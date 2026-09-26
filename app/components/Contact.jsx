@@ -2,11 +2,28 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X } from 'lucide-react';
 import { assets } from '../assets/assets';
 
 const Contact = ({ isDarkMode }) => {
   const [result, setResult] = useState('');
+  
+  // Controlled form state for clear/cut icons
+  const [formDataState, setFormDataState] = useState({
+    name: '',
+    email: '',
+    message: '',
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormDataState((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleClearField = (fieldName) => {
+    setFormDataState((prev) => ({ ...prev, [fieldName]: '' }));
+  };
 
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -25,6 +42,7 @@ const Contact = ({ isDarkMode }) => {
 
       if (data.success) {
         setResult('Form Submitted Successfully');
+        setFormDataState({ name: '', email: '', message: '' });
         event.target.reset();
       } else {
         console.log('Error', data);
@@ -87,44 +105,112 @@ const Contact = ({ isDarkMode }) => {
         viewport={{ once: false, amount: 0.2 }}
         className="max-w-2xl mx-auto"
       >
-        {/* Name and Email Inputs */}
+        {/* Name and Email Inputs Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-10 mb-8">
-          <motion.input
+          
+          {/* Name Field with Cut/Clear Icon */}
+          <motion.div
             initial={{ x: -25, opacity: 0 }}
             whileInView={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.1 }}
             viewport={{ once: false, amount: 0.2 }}
-            type="text"
-            placeholder="Enter your name"
-            required
-            name="name"
-            className="flex-1 p-3.5 outline-none border-[0.5px] border-gray-400 dark:border-white/30 rounded-lg bg-white dark:bg-darkHover/30 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/50 focus:border-black dark:focus:border-white transition-colors"
-          />
-          <motion.input
+            className="relative flex items-center"
+          >
+            <input
+              type="text"
+              placeholder="Enter your name"
+              required
+              name="name"
+              value={formDataState.name}
+              onChange={handleInputChange}
+              className="w-full p-3.5 pr-10 outline-none border-[0.5px] border-gray-400 dark:border-white/30 rounded-lg bg-white dark:bg-darkHover/30 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/50 focus:border-black dark:focus:border-white transition-colors"
+            />
+            <AnimatePresence>
+              {formDataState.name.length > 0 && (
+                <motion.button
+                  type="button"
+                  onClick={() => handleClearField('name')}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute right-3 p-1 rounded-full bg-gray-200/80 hover:bg-gray-300 dark:bg-white/10 dark:hover:bg-white/20 text-gray-500 dark:text-white/70 transition-colors"
+                >
+                  <X size={14} />
+                </motion.button>
+              )}
+            </AnimatePresence>
+          </motion.div>
+
+          
+          <motion.div
             initial={{ x: 25, opacity: 0 }}
             whileInView={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.1 }}
             viewport={{ once: false, amount: 0.2 }}
-            type="email"
-            placeholder="Enter your email"
-            required
-            name="email"
-            className="flex-1 p-3.5 outline-none border-[0.5px] border-gray-400 dark:border-white/30 rounded-lg bg-white dark:bg-darkHover/30 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/50 focus:border-black dark:focus:border-white transition-colors"
-          />
+            className="relative flex items-center"
+          >
+            <input
+              type="email"
+              placeholder="Enter your email"
+              required
+              name="email"
+              value={formDataState.email}
+              onChange={handleInputChange}
+              className="w-full p-3.5 pr-10 outline-none border-[0.5px] border-gray-400 dark:border-white/30 rounded-lg bg-white dark:bg-darkHover/30 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/50 focus:border-black dark:focus:border-white transition-colors"
+            />
+            <AnimatePresence>
+              {formDataState.email.length > 0 && (
+                <motion.button
+                  type="button"
+                  onClick={() => handleClearField('email')}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute right-3 p-1 rounded-full bg-gray-200/80 hover:bg-gray-300 dark:bg-white/10 dark:hover:bg-white/20 text-gray-500 dark:text-white/70 transition-colors"
+                >
+                  <X size={14} />
+                </motion.button>
+              )}
+            </AnimatePresence>
+          </motion.div>
+
         </div>
 
-        {/* Message Textarea */}
-        <motion.textarea
+        {/* Message Textarea with Cut/Clear Icon */}
+        <motion.div
           initial={{ y: 25, opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
           viewport={{ once: false, amount: 0.2 }}
-          rows="6"
-          placeholder="Enter your message"
-          required
-          name="message"
-          className="w-full p-4 outline-none border-[0.5px] border-gray-400 dark:border-white/30 rounded-lg bg-white dark:bg-darkHover/30 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/50 focus:border-black dark:focus:border-white transition-colors mb-6"
-        />
+          className="relative mb-6"
+        >
+          <textarea
+            rows="6"
+            placeholder="Enter your message"
+            required
+            name="message"
+            value={formDataState.message}
+            onChange={handleInputChange}
+            className="w-full p-4 pr-10 outline-none border-[0.5px] border-gray-400 dark:border-white/30 rounded-lg bg-white dark:bg-darkHover/30 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/50 focus:border-black dark:focus:border-white transition-colors resize-none"
+          />
+          <AnimatePresence>
+            {formDataState.message.length > 0 && (
+              <motion.button
+                type="button"
+                onClick={() => handleClearField('message')}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.15 }}
+                className="absolute top-4 right-3.5 p-1 rounded-full bg-gray-200/80 hover:bg-gray-300 dark:bg-white/10 dark:hover:bg-white/20 text-gray-500 dark:text-white/70 transition-colors"
+              >
+                <X size={14} />
+              </motion.button>
+            )}
+          </AnimatePresence>
+        </motion.div>
 
         {/* Submit Button */}
         <motion.button
