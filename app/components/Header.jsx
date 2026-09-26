@@ -115,7 +115,7 @@ const Header = () => {
         {/* Resume Button */}
         <motion.a
           href="/Sangam-Resume.pdf"
-          download
+          download="Sangam-Resume.pdf"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className="px-10 py-3 border border-gray-500 dark:border-white/30 rounded-full flex items-center gap-2 bg-white dark:bg-transparent text-gray-900 dark:text-white font-medium shadow-sm hover:bg-gray-50 dark:hover:bg-white/10 transition"
