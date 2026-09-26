@@ -114,7 +114,7 @@ const Header = () => {
 
         {/* Resume Button */}
         <motion.a
-          href="/sample-resume.pdf"
+          href="/Sangam-Resume.pdf"
           download
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
